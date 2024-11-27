@@ -62,6 +62,7 @@ class Prizes(db.Model):
 class Leaderboard(db.Model):
     id = db.Column(db.String(200), primary_key=True, default=str(uuid.uuid4()))
     userId = db.Column(db.String(200), db.ForeignKey('user.id'), nullable=False)
+    gameId = db.Column(db.String(200), nullable=False)
     score = db.Column(db.Integer, nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.now(timezone.utc))
 
@@ -186,13 +187,12 @@ def decreaseCredits():
     db.session.commit()
     return jsonify({'success': 'credits decreased successfully'})
 
-@app.route("/leaderboard", methods=["GET"])
+@app.route('/leaderboard', methods=["GET"])
 def getLeaderboard():
-    leaderboard = Leaderboard.query.all()
-    leaderboard.sort(key=lambda x: x.score, reverse=True)
-    leaderboard = leaderboard[:10]
-    leaderboard = [{"userId": x.userId, "score": x.score} for x in leaderboard]
-    return jsonify(leaderboard)    
+    args = request.args
+    gameId = args.get("gameId")
+    leaderboard = Leaderboard.query.filter_by(gameId=gameId).order_by(Leaderboard.score.desc()).all()
+    return jsonify(leaderboard)
 
 if __name__ == '__main__':
     with app.app_context():
