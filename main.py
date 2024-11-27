@@ -51,9 +51,8 @@ def register():
     if request.method == 'POST':
         data = request.json
         username = data['username']
-        email = data['email']
         password = data['password']
-        user = User(username=username, email=email, passwordHash=hashpw(password.encode('utf-8'), gensalt()).decode('utf-8'))
+        user = User(username=username, passwordHash=hashpw(password.encode('utf-8'), gensalt()).decode('utf-8'))
         db.session.add(user)
         db.session.commit()
 
@@ -102,8 +101,57 @@ def getUserData():
     exists = db.session.query(db.exists().where(User.id == sessionInside.userId)).scalar()
     if (exists == False):
         return jsonify({'error': 'session not found'}) 
-    print(user)
     return jsonify({'userId': user.id, 'tickets': user.tickets, 'credits': user.credits})
+
+@app.route('/currency', methods=["GET"])
+def getCurrency():
+    args = request.args
+    sessionInside = Session(id=args.get("sessionId"))
+    user = User(id=sessionInside.userId)
+    exists = db.session.query(db.exists().where(User.id == sessionInside.userId)).scalar()
+    if (exists == False):
+        return jsonify({'error': 'session not found'}) 
+    return jsonify({'credits': user.credits})
+
+@app.route('/currency/tickets', methods=["POST"])
+def addTickets():
+    args = request.args
+    sessionInside = Session(id=args.get("sessionId"))
+    user = User(id=sessionInside.userId)
+    exists = db.session.query(db.exists().where(User.id == sessionInside.userId)).scalar()
+    if (exists == False):
+        return jsonify({'error': 'session not found'}) 
+    data = request.json
+    user.tickets += data['tickets']
+    db.session.commit()
+    return jsonify({'success': 'tickets added successfully'})
+
+@app.route('/currency/credits', methods=["POST"])
+def addCredits():
+    args = request.args
+    sessionInside = Session(id=args.get("sessionId"))
+    user = User(id=sessionInside.userId)
+    exists = db.session.query(db.exists().where(User.id == sessionInside.userId)).scalar()
+    if (exists == False):
+        return jsonify({'error': 'session not found'}) 
+    data = request.json
+    user.credits += data['credits']
+    db.session.commit()
+    return jsonify({'success': 'credits added successfully'})
+
+@app.route('/currency/play', methods=["POST"])
+def decreaseCredits():
+    args = request.args
+    sessionInside = Session(id=args.get("sessionId"))
+    user = User(id=sessionInside.userId)
+    exists = db.session.query(db.exists().where(User.id == sessionInside.userId)).scalar()
+    if (exists == False):
+        return jsonify({'error': 'session not found'}) 
+    data = request.json
+    user.credits -= data['credits']
+    db.session.commit()
+    return jsonify({'success': 'credits decreased successfully'})
+
     
 if __name__ == '__main__':
     with app.app_context():
