@@ -33,6 +33,31 @@ class Session(db.Model):
     
     def __repr__(self):
         return f"Session for user {self.userId}: {self.id}, {self.date_created}"
+
+# Association table for many-to-many relationship
+store_prizes = db.Table('store_prizes',
+    db.Column('store_id', db.String(200), db.ForeignKey('tiendas.id'), primary_key=True),
+    db.Column('prize_id', db.String(200), db.ForeignKey('prizes.id'), primary_key=True)
+)
+
+class Tiendas(db.Model):
+    id = db.Column(db.String(200), primary_key=True, default=str(uuid.uuid4()))
+    location = db.Column(db.String(200), nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    prizes = db.relationship('Prizes', secondary=store_prizes, lazy='subquery',
+                             backref=db.backref('stores', lazy=True))
+
+    def __repr__(self):
+        return f"{self.location}: {self.id}, {self.date_created}"
+
+class Prizes(db.Model):
+    id = db.Column(db.String(200), primary_key=True, default=str(uuid.uuid4()))
+    name = db.Column(db.String(200), nullable=False)
+    cost = db.Column(db.Integer, nullable=False)
+    date_created = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+
+    def __repr__(self):
+        return f"{self.name}: {self.id}, {self.cost}, {self.date_created}"
     
 @app.route('/debug')
 def printAll():
@@ -87,7 +112,7 @@ def logout():
         return jsonify({'success': 'User logged out successfully'})
     
 def check_session(sessionId):
-    session = Session.query.filter_by(id=sessionId).first()
+    session = Session.query.filter_by(id(sessionId)).first()
     if session:
         return True
     else:
