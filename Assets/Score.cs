@@ -18,6 +18,7 @@ public class Score : MonoBehaviour
     void Start()
     {
         timer = 60;
+        scoreText.text = "Score: 0";
     }
 
     // Update is called once per frame
