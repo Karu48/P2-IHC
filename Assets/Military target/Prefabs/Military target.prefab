@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 23415105773652922}
   - component: {fileID: 2014827033208205560}
   - component: {fileID: 8626885367441305307}
+  - component: {fileID: 2945622211800973120}
   m_Layer: 0
   m_Name: Military target
   m_TagString: Untagged
@@ -110,7 +111,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 126
   m_CollisionDetection: 0
 --- !u!65 &8626885367441305307
 BoxCollider:
@@ -131,5 +132,19 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.05115633, y: 0.004576826, z: 0.055537056}
-  m_Center: {x: 0, y: 0.00005385876, z: -0.05068153}
+  m_Size: {x: 0.06347404, y: 0.004576826, z: 0.115495756}
+  m_Center: {x: 0.00080053805, y: 0.00005385876, z: -0.020702183}
+--- !u!114 &2945622211800973120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501084758933746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 116f6e4d32cbe5444a9afe72b55324f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawner: {fileID: 0}
+  self: {fileID: 1501084758933746}
