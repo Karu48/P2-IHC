@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -20,11 +21,56 @@ public class Login : MonoBehaviour
     Status currentStatus = Status.username;
 
     public TMP_Text text;
-    public InputField inpt;
+    public InputField input;
+    
+    public GameObject nextButton;
+    public GameObject loginButton;
+    public GameObject registerButton;
 
     void Start()
     {
-        // StartCoroutine(register());
+        text.text = "Username";
+        nextButton.SetActive(true);
+        loginButton.SetActive(false);
+        registerButton.SetActive(false);
+    }
+
+    void Update()
+    {
+        if (currentStatus == Status.username)
+        {
+            if (nextButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
+            {
+                nextButton.SetActive(false);
+                loginButton.SetActive(true);
+                registerButton.SetActive(true);
+            
+                text.text = "password";
+                currentStatus = Status.password;
+                username = input.text;
+                input.text = "";
+            }
+        }
+
+        if (currentStatus == Status.password)
+        {
+            if (loginButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
+            {
+                text.text = "please wait...";
+                currentStatus = Status.enter;
+                password = input.text;
+                input.text = "";
+                StartCoroutine(login());
+            }
+            if (registerButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
+            {
+                text.text = "please wait...";
+                currentStatus = Status.enter;
+                password = input.text;
+                input.text = "";
+                StartCoroutine(register());
+            }
+        }
     }
 
     public IEnumerator register()
@@ -59,38 +105,5 @@ public class Login : MonoBehaviour
                 Debug.Log(request.result);
             }
         }
-    }
-
-    public void changeState()
-    {
-        switch (currentStatus)
-        {
-            case Status.username:
-                username = inpt.text;
-                inpt.text = "";
-                text.text = "Password";
-                currentStatus = Status.password;
-                break;
-            case Status.password:
-                password = inpt.text;
-                inpt.text = "";
-                text.text = "bruh";
-                StartCoroutine(login());
-                currentStatus = Status.enter;
-                break;
-            case Status.enter:
-                currentStatus = Status.username;
-                break;
-        }
-    }
-
-    public void pressLogin()
-    {
-        StartCoroutine(login());
-    }
-
-    public void pressRegister()
-    {
-        StartCoroutine(register());
     }
 }
