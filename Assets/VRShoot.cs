@@ -1,19 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
+using Meta.XR.MRUtilityKit.SceneDecorator;
 using UnityEngine;
 
 public class VRShoot : MonoBehaviour
 {
-    public SimpleShoot simpleShoot;
     public OVRInput.Button shootButton;
+    public GameObject bulletPrefab;
+    public float shootForce;
 
-    private OVRGrabbable Grabbable;
+    public float timeBetweenShots;
+
+    bool shooting;
+    bool readyToShoot;
+
+    public Transform firePoint;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        Grabbable = GetComponent<OVRGrabbable>();
+        readyToShoot = true;
     }
 
     // Update is called once per frame
@@ -21,8 +28,30 @@ public class VRShoot : MonoBehaviour
     {
         if (OVRInput.GetDown(shootButton))
         {
-            simpleShoot.StartShoot();
-            Debug.Log("Shoot");
+            if (readyToShoot)
+            {
+                Shoot();
+                shooting = true;
+                readyToShoot = false;
+
+                resetShot();
+            }
         }
+    }
+
+    void Shoot()
+    {
+        Vector3 direction = firePoint.forward;
+
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+
+        Rigidbody rb = bullet.GetComponent<Rigidbody>();
+        rb.AddForce(direction.normalized * shootForce, ForceMode.Impulse);
+    }
+
+    void resetShot()
+    {
+        shooting = false;
+        readyToShoot = true;
     }
 }
