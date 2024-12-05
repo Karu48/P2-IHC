@@ -16,6 +16,12 @@ public class TargetSpawner : MonoBehaviour
     public float time = 60;
     public GameObject RestartButton;
     public GameObject ExitButton;
+	 			public GameObject ReadyButton;
+
+			  bool 	Ingame = false;
+					bool ready = false;
+
+					float startTimer = 3;
 
     void Start()
     {
