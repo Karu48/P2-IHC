@@ -16,7 +16,7 @@ public class Basketball : MonoBehaviour
 
     void Update()
     {
-        if (Vector3.Distance(pos, GetComponent<Transform>().position) > 15)
+        if (Vector3.Distance(pos, GetComponent<Transform>().position) > 20)
         {
             transform.position = pos;
             GetComponent<Rigidbody>().velocity = Vector3.zero;
