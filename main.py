@@ -200,13 +200,22 @@ def addScore():
     sessionInside = Session(id=args.get("sessionId"))
     user = User(id=sessionInside.userId)
     exists = db.session.query(db.exists().where(User.id == sessionInside.userId)).scalar()
-    if (exists == False):
+    if not exists:
         return jsonify({'error': 'session not found'}) 
     data = request.json
-    leaderboard = Leaderboard(userId=user.id, gameId=data['gameId'], score=data['score'])
-    db.session.add(leaderboard)
-    db.session.commit()
-    return jsonify({'success': 'score added successfully'})
+    leaderboard_entry = Leaderboard.query.filter_by(userId=user.id, gameId=data['gameId']).first()
+    if leaderboard_entry:
+        if data['score'] > leaderboard_entry.score:
+            leaderboard_entry.score = data['score']
+            db.session.commit()
+            return jsonify({'success': 'score updated successfully'})
+        else:
+            return jsonify({'success': 'score not updated, lower or equal to existing score'})
+    else:
+        new_entry = Leaderboard(userId=user.id, gameId=data['gameId'], score=data['score'])
+        db.session.add(new_entry)
+        db.session.commit()
+        return jsonify({'success': 'score added successfully'})
 
 if __name__ == '__main__':
     with app.app_context():
