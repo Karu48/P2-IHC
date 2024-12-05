@@ -14,9 +14,14 @@ public class TargetSpawner : MonoBehaviour
     public TMP_Text scoreText;
 
     public float time = 60;
-    // Start is called before the first frame update
+    public GameObject RestartButton;
+    public GameObject ExitButton;
+
     void Start()
     {
+									RestartButton.SetActive(false);
+									ExitButton.SetActive(false);
+
         foreach (GameObject target in targetPrefab)
         {
             target.SetActive(false);
@@ -46,7 +51,14 @@ public class TargetSpawner : MonoBehaviour
             {
                 target.SetActive(false);
             }
-        }   
+        }
+									else
+									{
+											RestartButton.SetActive(true);
+											ExitButton.SetActive(true);
+
+											// Do onPress logic
+									}  
     }
 
     public void hitTarget(GameObject target)
