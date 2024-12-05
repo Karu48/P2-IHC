@@ -59,12 +59,12 @@ public class TargetSpawner : MonoBehaviour
 
 											// Do onPress logic
           if (RestartButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
-											{
+											{      
+										 SceneManager.LoadScene("Shooting");
 											} 
 							
           if (ExitButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
-											{
-
+											{										SceneManager.LoadScene("Lobby"); 
 											}
 									}  
     }
