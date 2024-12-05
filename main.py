@@ -194,6 +194,20 @@ def getLeaderboard():
     leaderboard = Leaderboard.query.filter_by(gameId=gameId).order_by(Leaderboard.score.desc()).all()
     return jsonify(leaderboard)
 
+@app.route('/leaderboard', methods=["POST"])
+def addScore():
+    args = request.args
+    sessionInside = Session(id=args.get("sessionId"))
+    user = User(id=sessionInside.userId)
+    exists = db.session.query(db.exists().where(User.id == sessionInside.userId)).scalar()
+    if (exists == False):
+        return jsonify({'error': 'session not found'}) 
+    data = request.json
+    leaderboard = Leaderboard(userId=user.id, gameId=data['gameId'], score=data['score'])
+    db.session.add(leaderboard)
+    db.session.commit()
+    return jsonify({'success': 'score added successfully'})
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
