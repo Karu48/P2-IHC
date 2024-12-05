@@ -70,7 +70,8 @@ public class Login : MonoBehaviour
                 currentStatus = Status.enter;
                 password = input.text;
                 input.text = "";
-                StartCoroutine(login());
+                // StartCoroutine(login());
+                currentStatus = Status.Logged;
 
                 loginButton.SetActive(false);
                 registerButton.SetActive(false);
@@ -81,7 +82,8 @@ public class Login : MonoBehaviour
                 currentStatus = Status.enter;
                 password = input.text;
                 input.text = "";
-                StartCoroutine(register());
+                // StartCoroutine(register());
+                currentStatus = Status.Logged;
 
                 loginButton.SetActive(false);
                 registerButton.SetActive(false);

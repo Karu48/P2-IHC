@@ -18,7 +18,7 @@ public class VRShoot : MonoBehaviour
     float shotCD;
 
     public Transform firePoint;
-
+    public AudioSource sound;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +37,7 @@ public class VRShoot : MonoBehaviour
                 shooting = true;
                 readyToShoot = false;
                 shotCD = timeBetweenShots;
+                sound.Play();
             }
         }
     

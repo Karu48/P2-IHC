@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class Score : MonoBehaviour
 {
     public int score = 0;
-    float timer = 0;
+    float timer = 10;
     public TMP_Text scoreText;
     public TMP_Text timerText;
 
@@ -16,6 +16,7 @@ public class Score : MonoBehaviour
     public GameObject ReadyButton;
     public GameObject RestartButton;
     public GameObject ExitButton;
+    public AudioSource audioSource;
 
     bool gameOver = false;
     bool ready = false;
@@ -26,7 +27,7 @@ public class Score : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        timer = 5;
+        timer = 30;
         scoreText.text = "Score: 0";
         foreach (GameObject ball in balls)
         {
@@ -81,6 +82,13 @@ public class Score : MonoBehaviour
                     ExitButton.SetActive(true);
                 }
             }
+            else
+            {
+                foreach (GameObject ball in balls)
+                {
+                    ball.SetActive(false);
+                }
+            }
         }
 
         if (RestartButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
@@ -97,6 +105,7 @@ public class Score : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         score++;
+        audioSource.Play();
         scoreText.text = "Score: " + score/2;
     }
 

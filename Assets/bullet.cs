@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class bullet : MonoBehaviour
 {
+
+    float timer = 3;
     // Update is called once per frame
     void Update()
     {
-        
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        Debug.Log("Hit");
-        if (other.gameObject.layer == 11)
+        timer -= Time.deltaTime;
+        if (timer <= 0)
         {
-            Destroy(other.gameObject);
             Destroy(gameObject);
         }
     }
+
 }

@@ -14,7 +14,7 @@ public class TargetSpawner : MonoBehaviour
 
     public TMP_Text scoreText;
 
-    public float time = 60;
+    public float time = 30;
     public GameObject RestartButton;
     public GameObject ExitButton;
 	public GameObject ReadyButton;
