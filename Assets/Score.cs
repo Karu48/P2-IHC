@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class Score : MonoBehaviour
 {
@@ -11,31 +13,85 @@ public class Score : MonoBehaviour
     public TMP_Text timerText;
 
     public GameObject[] balls;
+    public GameObject ReadyButton;
+    public GameObject RestartButton;
+    public GameObject ExitButton;
 
     bool gameOver = false;
+    bool ready = false;
+    bool ingame = false;
+
+    float readyTimer = 3;
 
     // Start is called before the first frame update
     void Start()
     {
-        timer = 60;
+        timer = 5;
         scoreText.text = "Score: 0";
+        foreach (GameObject ball in balls)
+        {
+            ball.SetActive(false);
+        }
+        RestartButton.SetActive(false);
+        ExitButton.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (gameOver == false)
+        if (ingame == false)
         {
-            timer -= Time.deltaTime;
-            timerText.text = "Time: " + timer.ToString("F2");
-            if (timer <= 0)
+            if (ready)
             {
-                GameOver();
-                gameOver = true;
-                timerText.text = "Time: 0";
+                readyTimer -= Time.deltaTime;
+                timerText.text = readyTimer.ToString("F0");
+                if (readyTimer <= 0)
+                {
+                    ingame = true;
+                    ready = false;
+                    readyTimer = 3;
+                }
+            }
+            else
+            {
+                if (ReadyButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
+                    {
+                        ready = true;
+                        ReadyButton.SetActive(false);
+                    }
+            }
+        }
+        else
+        {
+            foreach (GameObject ball in balls)
+            {
+                ball.SetActive(true);
+            }
+
+            if (gameOver == false)
+            {
+                timer -= Time.deltaTime;
+                timerText.text = "Time: " + timer.ToString("F2");
+                if (timer <= 0)
+                {
+                    GameOver();
+                    gameOver = true;
+                    timerText.text = "Game Over";
+                    RestartButton.SetActive(true);
+                    ExitButton.SetActive(true);
+                }
             }
         }
 
+        if (RestartButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
+        {      
+            SceneManager.LoadScene("Basket");
+        } 
+                        
+        if (ExitButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
+        {										
+            SceneManager.LoadScene("Lobby"); 
+        }
     }
 
     void OnTriggerEnter(Collider other)
