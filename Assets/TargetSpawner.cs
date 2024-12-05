@@ -58,6 +58,14 @@ public class TargetSpawner : MonoBehaviour
 											ExitButton.SetActive(true);
 
 											// Do onPress logic
+          if (RestartButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
+											{
+											} 
+							
+          if (ExitButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
+											{
+
+											}
 									}  
     }
 
