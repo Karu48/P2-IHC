@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Login : MonoBehaviour
@@ -13,7 +14,8 @@ public class Login : MonoBehaviour
     {
         username,
         password,
-        enter
+        enter,
+        Logged
     }
     
     string username;
@@ -27,12 +29,20 @@ public class Login : MonoBehaviour
     public GameObject loginButton;
     public GameObject registerButton;
 
+    public GameObject BasketGameButton;
+    public GameObject ShooterGameButton;
+    public GameObject BowlingGameButton;
+    public Canvas canvas;
+
     void Start()
     {
         text.text = "Username";
         nextButton.SetActive(true);
         loginButton.SetActive(false);
         registerButton.SetActive(false);
+        BasketGameButton.SetActive(false);
+        ShooterGameButton.SetActive(false);
+        BowlingGameButton.SetActive(false);
     }
 
     void Update()
@@ -61,6 +71,9 @@ public class Login : MonoBehaviour
                 password = input.text;
                 input.text = "";
                 StartCoroutine(login());
+
+                loginButton.SetActive(false);
+                registerButton.SetActive(false);
             }
             if (registerButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
             {
@@ -69,6 +82,39 @@ public class Login : MonoBehaviour
                 password = input.text;
                 input.text = "";
                 StartCoroutine(register());
+
+                loginButton.SetActive(false);
+                registerButton.SetActive(false);
+            }
+        }
+
+        if (currentStatus == Status.Logged)
+        {
+            nextButton.SetActive(false);
+            loginButton.SetActive(false);
+            registerButton.SetActive(false);
+            canvas.gameObject.SetActive(false);
+
+            BasketGameButton.SetActive(true);
+            ShooterGameButton.SetActive(true);
+            BowlingGameButton.SetActive(true);
+
+            if (BasketGameButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
+            {
+                // change scene
+                SceneManager.LoadScene("Basket");
+            }
+
+            if (ShooterGameButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
+            {
+                // change scene
+                SceneManager.LoadScene("Shooting");
+            }
+
+            if (BowlingGameButton.GetComponent<Rigidbody>().velocity.magnitude > 0)
+            {
+                // change scene
+                SceneManager.LoadScene("Bowling");
             }
         }
     }
@@ -85,7 +131,8 @@ public class Login : MonoBehaviour
             }
             else
             {
-                Debug.Log("Form upload complete!");
+                Debug.LogWarning(request.downloadHandler.text);
+                StartCoroutine(login());
             }
         }
     }
@@ -102,7 +149,8 @@ public class Login : MonoBehaviour
             }
             else
             {
-                Debug.Log(request.result);
+                Debug.LogWarning( request.downloadHandler.text);
+                currentStatus = Status.Logged;
             }
         }
     }

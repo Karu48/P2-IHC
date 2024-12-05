@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using Meta.XR.MRUtilityKit.SceneDecorator;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ public class VRShoot : MonoBehaviour
 
     bool shooting;
     bool readyToShoot;
+
+    float shotCD;
 
     public Transform firePoint;
 
@@ -33,10 +36,19 @@ public class VRShoot : MonoBehaviour
                 Shoot();
                 shooting = true;
                 readyToShoot = false;
-
-                resetShot();
+                shotCD = timeBetweenShots;
             }
         }
+    
+        if (timeBetweenShots > 0)
+        {
+            shotCD -= Time.deltaTime;
+            if (shotCD <= 0)
+            {
+                readyToShoot = true;
+            }
+        }
+
     }
 
     void Shoot()
